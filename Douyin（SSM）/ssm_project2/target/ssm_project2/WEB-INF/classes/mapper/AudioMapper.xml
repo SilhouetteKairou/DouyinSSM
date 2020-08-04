@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianfeng.dao.AudioDao">
+    <!--添加一条音频信息-->
+    <insert id="insertAudio" parameterType="com.qianfeng.pojo.Audio">
+        insert into audio(audio_title,audio_src,audio_date,audio_status,business_id)
+        values(#{audio_title},#{audio_src},SYSDATE(),1,#{business_id});
+    </insert>
+    <!--根据商户登录名查询音频信息-->
+    <select id="selectAudio" parameterType="int" resultType="com.qianfeng.pojo.Audio">
+        select v.audio_id,v.audio_title,v.audio_src,v.audio_date,audio_status,business_username
+        from audio v,business b
+        where v.business_id = b.business_id and v.business_id = #{business_id} and audio_status = 1
+        order by v.audio_date desc
+    </select>
+    <!--将video_id的音频video_status置为0，即商户删除状态-->
+    <update id="updateAudioToDeleteStatus" parameterType="int">
+        update audio set audio_status = 0 where audio_id = #{audio_id}
+    </update>
+
+    <!--根据商户登录名查询回收站的音频信息-->
+    <select id="selectRecycleAudio" parameterType="int" resultType="com.qianfeng.pojo.Audio">
+        select v.audio_id,v.audio_title,v.audio_src,v.audio_date,audio_status,business_username
+        from audio v,business b
+        where v.business_id = b.business_id and v.business_id = #{business_id} and audio_status = 0
+        order by v.audio_date desc
+    </select>
+
+    <!--将video_id的视频video_status置为1，即正常状态-->
+    <update id="updateAudioToNormalStatus" parameterType="int">
+        update audio set audio_status = 1 where audio_id = #{audio_id}
+    </update>
+
+    <!--根据_id删除视频信息-->
+    <delete id="deleteRecycleAudioByID" parameterType="int">
+        delete from audio where audio_id = #{audio_id}
+    </delete>
+
+    <!--根据音频标题查询某商户的视频信息-->
+    <select id="selectAudioByTitleAndBusinessID" parameterType="com.qianfeng.pojo.Audio" resultType="com.qianfeng.pojo.Audio">
+        select a.audio_id,a.audio_title,a.audio_src,a.audio_date,business_username
+        from audio a,business b
+        where a.business_id = b.business_id
+            and a.business_id = #{business_id}
+            and a.audio_title = #{audio_title}
+            and audio_status = 1
+    </select>
+
+    <!--根据商户登录名查询被管理员禁用的音频信息-->
+    <select id="selectForbiddenAudio" parameterType="int" resultType="com.qianfeng.pojo.Audio">
+        select v.audio_id,v.audio_title,v.audio_src,v.audio_date,audio_status,business_username
+        from audio v,business b
+        where v.business_id = b.business_id and v.business_id = #{business_id} and audio_status = -1
+        order by v.audio_date desc
+    </select>
+
+    <!--**************************************郭江昊***************************************************-->
+
+    <select id="selectAudioGJH" resultType="com.qianfeng.pojo.Audio"><!--##查询音频-->
+     select a.audio_id,a.audio_title,a.audio_src,a.audio_date,a.audio_status,a.business_id
+        from audio a,business b
+        where a.business_id = b.business_id
+</select>
+    <delete id="deleteAudioGJH" parameterType="com.qianfeng.pojo.Audio"><!--##删除音频-->
+        delete from audio where business_id=#{business_id}
+    </delete>
+
+
+
+
+</mapper>

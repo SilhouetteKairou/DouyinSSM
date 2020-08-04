@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianfeng.dao.VideoDao">
+
+
+
+    <!--*********************************刘南华******************************************-->
+
+    <!--1代表发布状态，0代表商户下架，-1代表管理员下架-->
+
+    <!--添加一条视频信息-->
+    <insert id="insertVideo" parameterType="com.qianfeng.pojo.Video">
+        insert into video(video_title,video_src,video_date,video_status,business_id)
+        values(#{video_title},#{video_src},SYSDATE(),1,#{business_id});
+    </insert>
+    <!--根据商户登录名查询视频信息-->
+    <select id="selectVideo" parameterType="int" resultType="com.qianfeng.pojo.Video">
+        select v.video_id,v.video_title,v.video_src,v.video_date,video_status,business_username
+        from video v,business b
+        where v.business_id = b.business_id and v.business_id = #{business_id} and video_status = 1
+        order by v.video_date desc
+    </select>
+    <!--将video_id的视频video_status置为0，即商户删除状态-->
+    <update id="updateVideoToDeleteStatus" parameterType="int">
+        update video set video_status = 0 where video_id = #{video_id}
+    </update>
+
+    <!--根据商户登录名查询回收站的视频信息-->
+    <select id="selectRecycleVideo" parameterType="int" resultType="com.qianfeng.pojo.Video">
+        select v.video_id,v.video_title,v.video_src,v.video_date,video_status,business_username
+        from video v,business b
+        where v.business_id = b.business_id and v.business_id = #{business_id} and video_status = 0
+        order by v.video_date desc
+    </select>
+
+    <!--将video_id的视频video_status置为1，即正常状态-->
+    <update id="updateVideoToNormalStatus" parameterType="int">
+        update video set video_status = 1 where video_id = #{video_id}
+    </update>
+
+    <!--根据video_id删除视频信息-->
+    <delete id="deleteRecycleVideoByID" parameterType="int">
+        delete from video where video_id = #{video_id}
+    </delete>
+
+    <!--根据视频标题查询某商户的视频信息-->
+    <select id="selectVideoByTitleAndBusinessID" parameterType="com.qianfeng.pojo.Video" resultType="com.qianfeng.pojo.Video">
+        select v.video_id,v.video_title,v.video_src,v.video_date,business_username
+        from video v,business b
+        where v.business_id = b.business_id
+            and v.business_id = #{business_id}
+            and v.video_title = #{video_title}
+            and video_status = 1
+    </select>
+
+    <!--根据商户登录名查询回收站的视频信息-->
+    <select id="selectForbiddenVideo" parameterType="int" resultType="com.qianfeng.pojo.Video">
+        select v.video_id,v.video_title,v.video_src,v.video_date,video_status,business_username
+        from video v,business b
+        where v.business_id = b.business_id and v.business_id = #{business_id} and video_status = -1
+        order by v.video_date desc
+    </select>
+    <!--**************************************刘南华***************************************************-->
+
+
+    <!--****************************郑安峰*************************************-->
+    <select id="selectAllVideo" parameterType="int" resultType="com.qianfeng.pojo.Video">
+        select v.video_id,v.video_title,v.video_src,v.video_date,b.business_username,v.video_status from video v,business b
+        where v.business_id=b.business_id and v.video_status = #{video_status}
+		order by v.video_date desc
+    </select>
+    <!--下架视频-->
+    <update id="deleteVideoByAdmin" parameterType="com.qianfeng.pojo.Video">
+        update video set video_status = -1
+        where  video_id = #{video_id}
+    </update>
+    <!--恢复视频-->
+    <update id="restoreVideoByAdmin" parameterType="com.qianfeng.pojo.Video">
+        update video set video_status = 1
+        where  video_id = #{video_id}
+    </update>
+
+
+</mapper>

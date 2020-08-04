@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianfeng.dao.LoginPassDao">
+
+    <select id="selectByPasswordAndUserId" parameterType="hashmap" resultType="com.qianfeng.pojo.LoginPass">
+        select * from loginpass where login_pass_word=#{login_pass_word}and login_user_id=#{login_user_id};
+    </select>
+
+    <update id="updatePassWord" parameterType="com.qianfeng.pojo.LoginPass">
+        UPDATE loginpass SET login_pass_word = #{login_pass_word} where login_user_id = #{login_user_id}
+    </update>
+
+
+
+
+
+</mapper>

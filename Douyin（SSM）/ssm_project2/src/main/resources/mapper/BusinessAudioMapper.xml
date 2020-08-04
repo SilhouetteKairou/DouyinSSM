@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianfeng.dao.BusinessAudioDao">
+
+    <select id="selectBusinessAudio" parameterType="int" resultType="com.qianfeng.pojo.Audio">
+        select a.audio_id,a.audio_title,a.audio_src,a.audio_date,b.business_username
+        from audio a,business b
+        where a.business_id = b.business_id and a.business_id = #{business_id}
+        order by a.audio_date desc
+    </select>
+
+
+</mapper>
